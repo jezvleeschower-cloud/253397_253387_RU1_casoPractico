@@ -13,7 +13,7 @@ public class SistemaAlmacen {
     }
 
     public boolean registrarProveedor(Proveedor p) {
-        // No se aceptan nulos ni IDs repetidos (romperían las búsquedas)
+        // No se aceptan nulos ni IDs repetidos
         if (p == null || buscarProveedorPorId(p.getIdProveedor()) != null) {
             return false;
         }
@@ -45,8 +45,7 @@ public class SistemaAlmacen {
         return contadorProductos < productos.length;
     }
 
-    // El siguiente ID se calcula a partir del mayor ID registrado, así nunca choca
-    // con un ID existente (antes era un contador fijo en Main que empezaba en 3)
+    // El siguiente ID se calcula a partir del mayor ID registrado, así nunca choca con un ID existente
     public int siguienteIdProveedor() {
         int max = 0;
         for (int i = 0; i < contadorProveedores; i++) {

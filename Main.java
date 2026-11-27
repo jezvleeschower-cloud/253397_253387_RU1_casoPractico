@@ -122,14 +122,14 @@ public class Main {
                 }
             } while (opcion != 5);
         } catch (NoSuchElementException e) {
-            // Fin de la entrada (Ctrl+D / Ctrl+Z o entrada redirigida agotada)
+            // Fin de la entrada
             System.out.println("\nEntrada finalizada. Saliendo del sistema...");
         }
 
         scanner.close();
     }
 
-    // ----- Métodos auxiliares de lectura con validación -----
+    // Métodos auxiliares de lectura con validación
 
     private static String leerTexto(String mensaje) {
         while (true) {
