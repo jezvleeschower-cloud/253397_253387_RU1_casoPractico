@@ -1,4 +1,4 @@
-# 253397_253387_U1_CasoPractico4
+# 253397_253387_RU1_CasoPractico4
 
 Sistema de gestión de almacén en Java (consola) que usa arreglos de objetos para registrar proveedores y productos.
 
