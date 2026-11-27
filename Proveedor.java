@@ -29,6 +29,7 @@ public class Proveedor {
 
     @Override
     public String toString() {
-        return "Empresa: " + empresa + " | Repartidor: " + repartidor + " | Tel: " + telefono;
+        // Se incluye el ID para que el reporte y las listas muestren qué proveedor es
+        return "ID: " + idProveedor + " | Empresa: " + empresa + " | Repartidor: " + repartidor + " | Tel: " + telefono;
     }
 }

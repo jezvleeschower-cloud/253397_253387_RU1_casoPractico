@@ -14,8 +14,6 @@ public class Main {
         sistema.registrarProveedor(prov2);
 
         int opcion = 0;
-        int secProductos = 101;
-        int secProveedores = 3;
 
         try {
             do {
@@ -41,12 +39,11 @@ public class Main {
                             break;
                         }
                         String repartidor = leerTexto("Nombre del repartidor: ");
-                        String tel = leerTexto("Teléfono de contacto: ");
+                        String tel = leerTelefono("Teléfono de contacto: ");
                         String empresa = leerTexto("Nombre de la empresa: ");
 
-                        Proveedor nuevoProv = new Proveedor(secProveedores, repartidor, tel, empresa);
+                        Proveedor nuevoProv = new Proveedor(sistema.siguienteIdProveedor(), repartidor, tel, empresa);
                         if (sistema.registrarProveedor(nuevoProv)) {
-                            secProveedores++;
                             System.out.println("¡Proveedor registrado correctamente! (ID: " + nuevoProv.getIdProveedor() + ")");
                         } else {
                             System.out.println("Error: No se pudo registrar el proveedor.");
@@ -58,6 +55,11 @@ public class Main {
                             System.out.println("Error: Capacidad máxima de almacén alcanzada.");
                             break;
                         }
+                        // Sin proveedores no se puede surtir mercancía
+                        if (sistema.getContadorProveedores() == 0) {
+                            System.out.println("Error: Primero registre un proveedor (opción 1).");
+                            break;
+                        }
                         sistema.listarProveedores();
                         int idProv = leerEntero("Ingrese el ID del proveedor que surte la mercancía: ");
                         Proveedor provEncontrado = sistema.buscarProveedorPorId(idProv);
@@ -67,9 +69,8 @@ public class Main {
                             int stock = leerEnteroPositivo("Cantidad (Stock): ");
                             double precio = leerDoublePositivo("Precio de compra acordado: ");
 
-                            Producto nuevoProducto = new Producto(secProductos, nombreProd, stock, precio, provEncontrado);
+                            Producto nuevoProducto = new Producto(sistema.siguienteIdProducto(), nombreProd, stock, precio, provEncontrado);
                             if (sistema.registrarProducto(nuevoProducto)) {
-                                secProductos++;
                                 System.out.println("¡Producto registrado con éxito! (ID: " + nuevoProducto.getIdProducto() + ")");
                             } else {
                                 System.out.println("Error: No se pudo registrar el producto.");
@@ -87,17 +88,24 @@ public class Main {
                         // Se muestran los productos para que el usuario conozca sus IDs
                         sistema.listarProductos();
                         int idProdMod = leerEntero("Ingrese el ID del producto a modificar: ");
-                        if (sistema.buscarProductoPorId(idProdMod) == null) {
+                        Producto prodMod = sistema.buscarProductoPorId(idProdMod);
+                        if (prodMod == null) {
                             System.out.println("Error: Producto no encontrado.");
                             break;
                         }
                         sistema.listarProveedores();
                         int idNuevoProv = leerEntero("Ingrese el ID del nuevo proveedor: ");
 
-                        if (sistema.cambiarProveedorProducto(idProdMod, idNuevoProv)) {
+                        // Cada caso tiene su propio mensaje
+                        if (sistema.buscarProveedorPorId(idNuevoProv) == null) {
+                            System.out.println("Error: Proveedor no encontrado.");
+                        } else if (prodMod.getProveedor() != null
+                                && prodMod.getProveedor().getIdProveedor() == idNuevoProv) {
+                            System.out.println("Aviso: El producto ya tiene asignado ese proveedor. No se realizaron cambios.");
+                        } else if (sistema.cambiarProveedorProducto(idProdMod, idNuevoProv)) {
                             System.out.println("¡Proveedor actualizado correctamente!");
                         } else {
-                            System.out.println("Error: Proveedor no encontrado.");
+                            System.out.println("Error: No se pudo actualizar el proveedor.");
                         }
                         break;
 
@@ -131,6 +139,19 @@ public class Main {
                 return valor;
             }
             System.out.println("Error: El campo no puede estar vacío.");
+        }
+    }
+
+    // Acepta dígitos con separadores comunes (espacios, guiones, paréntesis, + inicial)
+    // y exige entre 7 y 15 dígitos, p. ej. 555-1234, 5555 1234, +502 5555-1234
+    private static String leerTelefono(String mensaje) {
+        while (true) {
+            String valor = leerTexto(mensaje);
+            int digitos = valor.replaceAll("[^0-9]", "").length();
+            if (valor.matches("\\+?[0-9 ()-]+") && digitos >= 7 && digitos <= 15) {
+                return valor;
+            }
+            System.out.println("Error: Teléfono inválido. Use solo números (7 a 15 dígitos), espacios o guiones.");
         }
     }
 

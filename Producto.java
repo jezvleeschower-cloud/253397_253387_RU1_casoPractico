@@ -1,3 +1,5 @@
+import java.util.Locale;
+
 public class Producto {
     private int idProducto;
     private String nombre;
@@ -41,9 +43,9 @@ public class Producto {
     public String toString() {
         // Se evita NullPointerException si el producto no tiene proveedor
         String datosProveedor = (proveedor != null) ? proveedor.toString() : "Sin proveedor";
-        // Precio con 2 decimales (antes se imprimía el double crudo, p. ej. 12.0 o 0.30000000000000004)
+        // Precio con 2 decimales y siempre con punto decimal (Locale.ROOT), sin importar la configuración regional
         return "ID: " + idProducto + " | Nombre: " + nombre + " | Stock: " + stock +
-               " | Precio: $" + String.format("%.2f", precioCompra) +
+               " | Precio: $" + String.format(Locale.ROOT, "%.2f", precioCompra) +
                " | Proveedor: [" + datosProveedor + "]";
     }
 }

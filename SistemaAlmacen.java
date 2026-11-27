@@ -45,6 +45,24 @@ public class SistemaAlmacen {
         return contadorProductos < productos.length;
     }
 
+    // El siguiente ID se calcula a partir del mayor ID registrado, así nunca choca
+    // con un ID existente (antes era un contador fijo en Main que empezaba en 3)
+    public int siguienteIdProveedor() {
+        int max = 0;
+        for (int i = 0; i < contadorProveedores; i++) {
+            max = Math.max(max, proveedores[i].getIdProveedor());
+        }
+        return max + 1;
+    }
+
+    public int siguienteIdProducto() {
+        int max = 100; // Los productos inician en 101
+        for (int i = 0; i < contadorProductos; i++) {
+            max = Math.max(max, productos[i].getIdProducto());
+        }
+        return max + 1;
+    }
+
     public Proveedor buscarProveedorPorId(int id) {
         for (int i = 0; i < contadorProveedores; i++) {
             if (proveedores[i].getIdProveedor() == id) {
@@ -95,7 +113,7 @@ public class SistemaAlmacen {
             return;
         }
         for (int i = 0; i < contadorProveedores; i++) {
-            System.out.println("ID: " + proveedores[i].getIdProveedor() + " | " + proveedores[i]);
+            System.out.println(proveedores[i]); // toString() ya incluye el ID
         }
     }
 
